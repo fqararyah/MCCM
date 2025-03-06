@@ -1,0 +1,26 @@
+[
+    {
+        "board_name": "zc706",
+        "on_chip_memory": 2.4,
+        "num_pes": 900,
+        "bw": 3.2
+    },
+    {
+        "board_name": "vcu108",
+        "on_chip_memory": 7.6,
+        "num_pes": 768,
+        "bw": 19.2
+    },
+    {
+        "board_name": "vcu110",
+        "on_chip_memory": 16.6,
+        "num_pes": 1800,
+        "bw": 19.2
+    },
+    {
+        "board_name": "zcu102",
+        "on_chip_memory": 4,
+        "num_pes": 2520,
+        "bw": 19.2
+    }
+]

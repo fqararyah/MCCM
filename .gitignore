@@ -1,0 +1,17 @@
+*.o
+*.out
+*.pdf
+*.png
+*.pyc
+*_dw_weights.h
+code_gen/out/**
+off_chip_weights/*
+**/custom_mappings_json/*
+**/figures_data_p2/*/**
+**/optimizer_progress/**
+ign*
+*_quantization_and_biases.h
+**/figures/**
+**/figures_p2/**
+**/tmp/**
+**/timing*/*.json
