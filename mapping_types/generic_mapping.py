@@ -8,6 +8,9 @@ import mapping_utils
 import mapping_utils.mapping_general_utils as mapping_utils
 
 class GenericMapping(ABC):
+    '''This class defines the basic interface of a mapping (i.e. mutlipe-CE accelerator)
+    A customized multiple-CE accelerator needs mus inherit this class'''
+    
     #main design overheads plus internal temporary buffers
     EXTRA_MEMORY_OVERHEADS_W = 0#0.05
     EXTRA_MEMORY_OVERHEADS_FM = 0#0.05
