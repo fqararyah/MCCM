@@ -9,7 +9,6 @@ from .sesl_mapping import *
 from hw_config import *
 import copy
 
-
 class HybridMapping(GenericMapping):
     EXTRA_MEMORY_OVERHEADS_W = 0#0.05
     EXTRA_MEMORY_OVERHEADS_FM = 0#0.05
@@ -24,7 +23,7 @@ class HybridMapping(GenericMapping):
                  first_layer_ifms_are_on_chip=False,
                  last_layer_ofms_are_on_chip=False,
                  fuse_in_the_second_part=False,
-                 exec_v2=True):
+                 exec_v2=False):
         super().__init__(hw_config, layers, [])
         self.rows_to_produce_in_pipe_pass = rows_to_produce_in_pipe_pass
         self.first_part_rows_to_produce_in_pipe_pass = first_part_rows_to_produce_in_pipe_pass
@@ -86,13 +85,10 @@ class HybridMapping(GenericMapping):
         self.second_part_hw_config.on_chip_memory = second_part_on_chip_mem
 
     def initialize_mappings(self):
-        engine_parallelization_strategy=ParallelizationStrategies.OFMS_W
-        if constants.USE_BSAELINES_OWN_PARALLELIZTION_STRATEGIES:
-            engine_parallelization_strategy=ParallelizationStrategies.OFMS_IFM
         self.first_part_mapping = SESLMapping(self.first_part_hw_config,
                                               self.model_dag, self.first_part_layers,
                                               last_layer_ofms_are_on_chip=True,
-                                              engine_parallelization_strategy=engine_parallelization_strategy)
+                                              engine_parallelization_strategy=ParallelizationStrategies.OFMS_W)
         if self.fuse_in_the_second_part:
             self.second_part_mapping = SEMLMapping_FUSED(self.second_part_hw_config,
                                                          self.model_dag, self.second_part_layers,
@@ -104,7 +100,7 @@ class HybridMapping(GenericMapping):
 
     def calc_exec_time(self, print_desc=False):
         if print_desc:
-            print(self.MAPPING_LABEL, self.first_part_mapping.calc_exec_time(),
+            print(self.first_part_mapping.calc_exec_time(),
                   self.second_part_mapping.calc_exec_time())
         return self.first_part_mapping.calc_exec_time() + self.second_part_mapping.calc_exec_time()
 
@@ -187,42 +183,3 @@ class HybridMapping(GenericMapping):
 
     def get_off_chip_tmp_channels_layers(self):
         return self.second_part_mapping.get_off_chip_tmp_channels_layers()
-
-
-    def get_dict_representation(self):
-        mapping_dict = {}
-
-        layers_str = '0'
-        first_part_layers = len(self.first_part_layers)
-        first_part_engines = self.first_part_mapping.get_num_engines()
-        if first_part_layers > 1:
-            layers_str += '-{}'.format(first_part_layers)
-        engines_str = '0'
-        if first_part_engines > 1:
-            engines_str += '-{}'.format(first_part_engines)
-
-        mapping_dict[layers_str] = engines_str
-
-        layers_str = str(first_part_layers)
-        second_part_layers = len(self.second_part_layers)
-        second_part_engines = self.second_part_mapping.get_num_engines()
-        if second_part_layers > 1:
-            layers_str += '-{}'.format(first_part_layers + second_part_layers)
-        engines_str = str(first_part_engines)
-        if second_part_engines > 1:
-            engines_str += '-{}'.format(first_part_engines + second_part_engines)
-
-        mapping_dict[layers_str] = engines_str
-
-        return mapping_dict
-    
-    def calc_energy(self):
-        energy_cons = 0
-        energy_cons_breakdown = {}
-
-        first_part_cons = self.first_part_mapping.calc_energy()
-        second_part_cons = self.second_part_mapping.calc_energy()
-
-        energy_cons = first_part_cons + second_part_cons
-
-        return energy_cons#, energy_cons_breakdown

@@ -6,10 +6,10 @@ from mapping_types.seml_mapping_lbl import *
 from mapping_types.seml_mapping_fused import *
 from mapping_types.sesl_mapping import *
 from mapping_types.segment_grained_mapping_rr import *
-from mapping_types.mapping_description import *
 from hw_config import *
 import random
 from mapping_types.custom_mapping import *
+from preformance_record import *
 
 
 def prepare_custom_mapping_desc(segment_layers_list, segment_blocks_list, block_engines_list):

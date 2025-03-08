@@ -1,0 +1,5 @@
+pad
+maxpool
+add
+mean
+biasadd

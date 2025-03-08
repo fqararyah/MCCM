@@ -10,13 +10,13 @@ from mapping_types.hybrid_rr_mapping import *
 import __init__
 import mapping_utils.mapping_general_utils as mapping_general_utils
 from hw_config import *
-import experiments as exps
+import experiments.experiments as exps
 from preformance_record import *
 import constants
-import generate_custom_mappings_json as gen_mappings
+import mapping_generation_utils.generate_custom_mappings_json as gen_mappings
 import os
 import time
-import paper_specific_exps
+import experiments.paper_specific_exps as paper_specific_exps
 
 # tmp = ['resnet50', 'resnet152', 'mob_v2', 'dense121', 'xce_r']#vgg16
 # for model_name in tmp:
@@ -31,9 +31,9 @@ board_names = mapping_general_utils.read_board_names(file_name=constants.HW_CONF
 print(board_names)
 model_names = ['resnet152', 'resnet50', 'xce_r', 'dense121', 'mob_v2']
 
-plot_bests = False
-plot_all_metric_pairs = False
-custom_mappings = False
+plot_bests = True
+plot_all_metric_pairs = True
+custom_mappings = True
 run_paper_specific_exps = True
 
 

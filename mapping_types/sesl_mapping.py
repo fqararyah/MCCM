@@ -1,13 +1,12 @@
 
 import __init__
 from generic_mapping import GenericMapping
-from simple_mapping import SimpleMapping
 import utils
 from engines.engine import *
 import constants
 
 
-class SESLMapping(SimpleMapping):
+class SESLMapping(GenericMapping):
     DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS = 1
     MAPPING_LABEL = 'SESL'
 
@@ -92,19 +91,8 @@ class SESLMapping(SimpleMapping):
                         layer_specs, self.layers_to_produce_row_counts[max_latency_index])
             else:
                 break
-    
-    def calc_layers_exec_times(self):
-        for i in range(len(self.layers)):
-            layer_index = self.layers[i]
-            layer_specs = self.model_dag[layer_index]
-            self.layers_exec_times[i] = \
-                self.engines[i].calc_layer_exec_time(
-                    layer_specs, self.layers_to_produce_row_counts[i])
 
-        return self.layers_exec_times 
-    
     def calc_pipe_filling_time(self):
-        self.calc_layers_exec_times()
         pipe_filling_time = 0
         for i in range(1, self.num_engines):
             pipe_filling_time += max(self.layers_exec_times[0: i])
@@ -117,8 +105,7 @@ class SESLMapping(SimpleMapping):
         return (pipe_filing_time + pipe_bottleneck * self.get_pipe_num_passes()) / self.hw_config.frequency
 
     def calc_exec_time(self, print_desc = False):
-        if print_desc:
-            print(self.MAPPING_LABEL)
+        #print(self.calc_compute_time(), self.calc_off_chip_access_time())
         self.exec_time = max(self.calc_compute_time(),
                              self.calc_off_chip_access_time())
         return self.exec_time
@@ -130,7 +117,6 @@ class SESLMapping(SimpleMapping):
         pass
 
     def calc_throughput(self):
-        self.calc_layers_exec_times()
         pipe_bottleneck = max(self.layers_exec_times)
         throughput = 1 / (pipe_bottleneck *
                           self.get_pipe_num_passes() / self.hw_config.frequency)
@@ -200,7 +186,7 @@ class SESLMapping(SimpleMapping):
             layer_index = self.layers[i]
             layer_specs = self.model_dag[layer_index]
             weights_buffer_sz += self.calc_actual_bram_cons(utils.get_layer_weights_size(layer_specs)
-                                                         , self.engines[i].get_ports_weights())
+                                                         , self.engines[i].get_parallelism_weights())
         return weights_buffer_sz
     
     def calc_weights_buffer_sz(self):
@@ -244,14 +230,3 @@ class SESLMapping(SimpleMapping):
         off_chip_access += self.off_chip_fms_access_of_first_and_last_layers
 
         return off_chip_access
-
-    def get_dict_representation(self):
-        mapping_dict = {}
-        num_layers = len(self.num_layers)
-        num_engines = self.get_num_engines()
-        layers_str = '0-{}'.format(num_layers)
-        engines_str = '0-{}'.format(num_engines)
-
-        mapping_dict[layers_str] = engines_str
-
-        return mapping_dict

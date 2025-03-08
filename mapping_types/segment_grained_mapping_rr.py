@@ -3,10 +3,9 @@ from generic_mapping import GenericMapping
 import __init__
 import utils
 from engines.engine import *
-from simple_mapping import SimpleMapping
 import constants
 
-class SegmentMappingRR(SimpleMapping):
+class SegmentMappingRR(GenericMapping):
     EXTRA_MEMORY_OVERHEADS_W = 0#0.05
     EXTRA_MEMORY_OVERHEADS_FM = 0#0.05
     EXTRA_MEMORY_OVERHEADS_CONST = 0 * constants.KiB
@@ -14,7 +13,6 @@ class SegmentMappingRR(SimpleMapping):
     MAPPING_LABEL = 'SegmentedRR'
 
     def __init__(self, hw_config, model_dag, layers, num_engines, engines=None,
-                 pre_balanced_engines=False,
                  rows_to_produce_in_pipe_pass=DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS,
                  first_layer_ifms_are_on_chip=False,
                  last_layer_ofms_are_on_chip=False):
@@ -43,16 +41,12 @@ class SegmentMappingRR(SimpleMapping):
         self.exec_time = -1
         self.num_layer_groups = int(
             math.ceil(self.num_layers / self.num_engines))
-        self.calc_required_dw_and_conv_engines()
-        if not pre_balanced_engines:
-            self.initialize_engines()
-        self.initialize_engine_layers()
+        self.initialize_engines()
         self.layers_to_produce_row_counts = [
             self.DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS] * self.num_layers
         self.calc_to_produce_row_counts()
         self.layers_exec_times = [-1] * len(layers)
-        if not pre_balanced_engines:
-            self.allocate_and_balance_pes_to_engines(hw_config.num_pes)
+        self.allocate_and_balance_pes_to_engines(hw_config.num_pes)
 
     def get_label(self):
         return self.MAPPING_LABEL
@@ -77,17 +71,19 @@ class SegmentMappingRR(SimpleMapping):
     def initialize_engines(self):
         if self.engines == None:
             self.engines = []
+        if utils.has_dw_layers(self.model_dag):
+            # there maight be different numbers of dw and pw layers in a range
+            self.calc_required_dw_and_conv_engines()
+        else:
+            self.num_engines_refined = self.num_engines
+            self.num_conv_pw_engines = self.num_engines
         for i in range(self.num_engines_refined):
             if i < self.num_conv_pw_engines:
-                if constants.USE_BSAELINES_OWN_PARALLELIZTION_STRATEGIES:
-                    self.engines.append(Engine(1, parallelization_strategy=ParallelizationStrategies.OFMS_IFM))
-                else:
-                    self.engines.append(Engine(1))
+                self.engines.append(Engine(1))
             else:
                 self.engines.append(
                     Engine(1, parallelization_strategy=ParallelizationStrategies.IN_FILTER_H_W))
 
-    def initialize_engine_layers(self):
         dw_layers_in_segment_so_far = 0
         conv_layers_in_segment_so_far = 0
         for i in range(self.num_layers):
@@ -177,7 +173,7 @@ class SegmentMappingRR(SimpleMapping):
             self.engines[i].distribute_PEs_on_dims(self.model_dag, self.engine_layer_map[i],
                                                    [self.layers_to_produce_row_counts[j] for j in self.engine_layer_offset_map[i]])
 
-    def calc_layers_exec_times(self):
+        # obtain layers exec times
         for engine_index, layer_indices in self.engine_layer_map.items():
             for i in range(len(layer_indices)):
                 layer_index = layer_indices[i]
@@ -186,8 +182,6 @@ class SegmentMappingRR(SimpleMapping):
                 self.layers_exec_times[layer_offset] = \
                     self.engines[engine_index].calc_layer_exec_time(
                         layer_specs, self.layers_to_produce_row_counts[layer_offset])
-
-        return self.layers_exec_times     
 
     def calc_pipe_filling_times(self):
         pipe_filling_times = [0] * self.num_layer_groups
@@ -203,7 +197,6 @@ class SegmentMappingRR(SimpleMapping):
         return pipe_filling_times
 
     def calc_compute_time(self):
-        self.calc_layers_exec_times()
         pipe_filing_times = self.calc_pipe_filling_times()
         pipe_num_passes = self.get_pipe_num_passes()
         self.segment_comp_times = [0] * self.num_layer_groups
@@ -223,8 +216,6 @@ class SegmentMappingRR(SimpleMapping):
                 self.calc_segment_off_chip_fms_access(segment_index, available_on_chip_memory)) / self.hw_config.bw
 
     def calc_exec_time(self, print_desc = False):
-        if print_desc:
-            print(self.MAPPING_LABEL)
         on_chip_memory = self.hw_config.on_chip_memory
         weights_buffer_sz = self.calc_weights_buffer_sz()
         on_chip_memory -= weights_buffer_sz
@@ -367,7 +358,7 @@ class SegmentMappingRR(SimpleMapping):
                 self.engines[i].par_ofms / \
                 utils.get_layer_weights_shape(layer_specs)[0]
             rm_weights_sz = self.calc_actual_bram_cons(
-                rm_weights_sz, self.engines[i].get_ports_weights())
+                rm_weights_sz, self.engines[i].get_parallelism_weights())
             weights_buffer_sz += rm_weights_sz
             i += 1
 
@@ -379,7 +370,7 @@ class SegmentMappingRR(SimpleMapping):
         for layer_index in layers:
             layer_specs = self.model_dag[layer_index]
             weights_buffer_sz += self.calc_actual_bram_cons(utils.get_layer_weights_size(
-                layer_specs), self.engines[i].get_ports_weights())
+                layer_specs), self.engines[i].get_parallelism_weights())
             i += 1
 
         return weights_buffer_sz
@@ -405,7 +396,7 @@ class SegmentMappingRR(SimpleMapping):
                 continue
             layer_specs = self.model_dag[max_eingines_weight_buffer_layer_index]
             weights_buffer_sz += self.calc_actual_bram_cons(utils.get_layer_weights_size(
-                layer_specs), self.engines[i].get_ports_weights())
+                layer_specs), self.engines[i].get_parallelism_weights())
 
         return weights_buffer_sz
     
@@ -560,14 +551,3 @@ class SegmentMappingRR(SimpleMapping):
         return engines_ifms_buffer_indices_main,engines_ifms_buffer_rows_main, \
             engines_ifms_buffer_indices_extra,engines_ifms_buffer_rows_extra, \
             engines_ofms_buffer_indices, engines_ofms_buffer_rows 
-
-    def get_dict_representation(self):
-        mapping_dict = {}
-        num_layers = self.num_layers
-        num_engines = self.get_num_engines()
-        layers_str = '0-{}'.format(num_layers)
-        engines_str = '0-{}'.format(num_engines)
-
-        mapping_dict[layers_str] = engines_str
-
-        return mapping_dict

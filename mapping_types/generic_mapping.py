@@ -4,15 +4,14 @@ import __init__
 import utils
 import constants
 import math
-import mapping_utils.mapping_general_utils as mapping_general_utils
-
+import mapping_utils
+import mapping_utils.mapping_general_utils as mapping_utils
 
 class GenericMapping(ABC):
-    # main design overheads plus internal temporary buffers
-    EXTRA_MEMORY_OVERHEADS_W = 0  # 0.05
-    EXTRA_MEMORY_OVERHEADS_FM = 0  # 0.05
+    #main design overheads plus internal temporary buffers
+    EXTRA_MEMORY_OVERHEADS_W = 0#0.05
+    EXTRA_MEMORY_OVERHEADS_FM = 0#0.05
     EXTRA_MEMORY_OVERHEADS_CONST = 0 * constants.KiB
-
     def __init__(self, hw_config, layers=None, engines=None, first_layer_ifms_are_on_chip=False,
                  last_layer_ofms_are_on_chip=False) -> None:
         super().__init__()
@@ -25,7 +24,7 @@ class GenericMapping(ABC):
         self.off_chip_fms_access_of_first_and_last_layers = -1
 
     @abstractmethod
-    def calc_exec_time(self, print_desc=False):
+    def calc_exec_time(self, print_desc = False):
         pass
 
     @abstractmethod
@@ -45,44 +44,27 @@ class GenericMapping(ABC):
         pass
 
     @abstractmethod
-    def calc_off_chip_fms_access(self, print_desc=False):
+    def calc_off_chip_fms_access(self, print_desc = False):
         pass
 
     @abstractmethod
-    def calc_fms_buffer_sz(self, print_desc=False):
+    def calc_fms_buffer_sz(self, print_desc = False):
         pass
-
+    
     @abstractmethod
     def get_segment_exec_times(self):
         pass
-
+    
     @abstractmethod
     def get_num_engines(self):
         pass
 
-    @abstractmethod
-    def get_dict_representation(self):
-        pass
-
-    @abstractmethod
-    def calc_energy(self):
-        pass
-
-    def __gt__(self, other):
-        return 1
-
-    def __lt__(self, other):
-        return 1
-
-    def get_num_layers(self):
-        return len(self.layers)
-
     def get_engines(self):
         return self.engines
-
+    
     def get_off_chip_tmp_channels_layers(self):
         return []
-
+    
     def get_pipe_num_passes(self):
         return 1
 
@@ -151,7 +133,7 @@ class GenericMapping(ABC):
             current_segment_on_chip_buffer_sz = max_ifms_ofms
         if available_on_chip_memory - current_segment_on_chip_buffer_sz > min_ifms_ofms:
             current_segment_on_chip_buffer_sz += min_ifms_ofms
-
+            
         if current_segment_on_chip_buffer_sz > max_ifms_ofms or current_segment_on_chip_buffer_sz == first_layer_ifms_sz:
             self.first_layer_on_chip_buffer = first_layer_ifms_sz
 
@@ -160,24 +142,20 @@ class GenericMapping(ABC):
 
         return current_segment_on_chip_buffer_sz
 
-    def calc_actual_bram_cons(self, buffer_size, parallelsim, data_bit_width=constants.BIT_WIDTH):
+    def calc_actual_bram_cons(self, buffer_size, parallelsim, data_bit_width = constants.BIT_WIDTH):
         if buffer_size < 0.5 * constants.KiB:
             return buffer_size
-
+        
         split_size = int(math.ceil(buffer_size / parallelsim))
         blocks_per_bank = int(
-            math.ceil(split_size / mapping_general_utils.get_bram_block_used_byes(data_bit_width)))
-
+            math.ceil(split_size / mapping_utils.get_bram_block_used_byes(data_bit_width)))
+        
         return blocks_per_bank * parallelsim * constants.BRAM_BLOCK_BYTES
-
+    
     def calc_on_chip_buffer_sz_pure(self):
         return self.calc_fms_buffer_sz() + self.calc_weights_buffer_sz()
-
+    
     def calc_on_chip_buffer_sz(self):
         buffer_sz = self.calc_fms_buffer_sz() * (1 + self.EXTRA_MEMORY_OVERHEADS_FM) + \
-            self.calc_weights_buffer_sz() * (1 + self.EXTRA_MEMORY_OVERHEADS_W) + \
-            self.EXTRA_MEMORY_OVERHEADS_CONST
-        return buffer_sz
-
-    def calc_required_bw(self):
-        return (self.calc_off_chip_fms_access() + self.calc_off_chip_weights_access()) / self.calc_exec_time()
+            self.calc_weights_buffer_sz() * (1 + self.EXTRA_MEMORY_OVERHEADS_W) + self.EXTRA_MEMORY_OVERHEADS_CONST
+        return  buffer_sz

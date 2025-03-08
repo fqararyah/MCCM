@@ -90,7 +90,7 @@ def generate_seg(board_name, model_name, min_engines, max_engines):
 def generate_hetero_sesl_seg(board_name, model_name, min_engines, max_engines, num_instances):
     mappings_list = []
     model_dag = utils.read_model_dag_v2(
-        cgc.MODEL_ARCH_DIR + model_name + '/model_dag.json')
+        constants.MODEL_ARCH_DIR + model_name + '/model_dag.json')
     num_layers = utils.get_num_conv_layer_count_in_range(
         model_dag, 0, len(model_dag))
     possibilities_count = 0
@@ -138,7 +138,7 @@ def generate_hetero_sesl_seg(board_name, model_name, min_engines, max_engines, n
 
         print(possibilities_count, 'possibilities!')
 
-board_name_list = mapping_general_utils.read_board_names()
+board_name_list = mapping_general_utils.read_board_names(file_name=constants.HW_CONFIGS_FILE_v1)
 model_name_list = constants.model_names
 
 do_generate_hybrid = False

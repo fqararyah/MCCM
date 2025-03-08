@@ -10,7 +10,6 @@ from .segment_grained_mapping_rr import *
 from hw_config import *
 import copy
 
-
 class HybridRRMapping(GenericMapping):
     DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS = 1
     FIRST_PART_DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS = 1
@@ -158,8 +157,6 @@ class HybridRRMapping(GenericMapping):
         return self.first_part_mapping.calc_exec_time() + self.second_part_mapping.calc_exec_time()
 
     def calc_exec_time(self, print_desc = False):
-        if print_desc:
-            print(self.MAPPING_LABEL)
         return self.calc_exec_time_semll_lbl()
     
     def calc_throughput(self):

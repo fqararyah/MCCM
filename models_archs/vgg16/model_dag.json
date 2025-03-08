@@ -1,0 +1,729 @@
+[
+    {
+        "name": "quantize",
+        "id": 0,
+        "activation": "0",
+        "parents": [],
+        "children": [
+            1
+        ],
+        "ifms_shape": [
+            1,
+            224,
+            224,
+            3
+        ],
+        "ofms_shape": [
+            1,
+            224,
+            224,
+            3
+        ],
+        "ofms_scales": 1.0774157047271729,
+        "ofms_zero_points": -13
+    },
+    {
+        "name": "conv_2d",
+        "id": 1,
+        "activation": "RELU",
+        "parents": [
+            0
+        ],
+        "children": [
+            2
+        ],
+        "ifms_scales": 1.0774157047271729,
+        "ifms_zero_points": -13,
+        "type": "s",
+        "weights_shape": [
+            64,
+            3,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            3,
+            224,
+            224
+        ],
+        "ofms_shape": [
+            64,
+            224,
+            224
+        ],
+        "strides": 1,
+        "ofms_scales": 4.006436347961426,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 2,
+        "activation": "RELU",
+        "parents": [
+            1
+        ],
+        "children": [
+            3
+        ],
+        "ifms_scales": 4.006436347961426,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            64,
+            64,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            64,
+            224,
+            224
+        ],
+        "ofms_shape": [
+            64,
+            224,
+            224
+        ],
+        "strides": 1,
+        "ofms_scales": 17.099807739257812,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "max_pool_2d",
+        "id": 3,
+        "activation": "0",
+        "parents": [
+            2
+        ],
+        "children": [
+            4
+        ],
+        "ifms_shape": [
+            1,
+            224,
+            224,
+            64
+        ],
+        "ofms_shape": [
+            1,
+            112,
+            112,
+            64
+        ],
+        "ofms_scales": 17.099807739257812,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 4,
+        "activation": "RELU",
+        "parents": [
+            3
+        ],
+        "children": [
+            5
+        ],
+        "ifms_scales": 17.099807739257812,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            128,
+            64,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            64,
+            112,
+            112
+        ],
+        "ofms_shape": [
+            128,
+            112,
+            112
+        ],
+        "strides": 1,
+        "ofms_scales": 32.08549880981445,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 5,
+        "activation": "RELU",
+        "parents": [
+            4
+        ],
+        "children": [
+            6
+        ],
+        "ifms_scales": 32.08549880981445,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            128,
+            128,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            128,
+            112,
+            112
+        ],
+        "ofms_shape": [
+            128,
+            112,
+            112
+        ],
+        "strides": 1,
+        "ofms_scales": 51.50186538696289,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "max_pool_2d",
+        "id": 6,
+        "activation": "0",
+        "parents": [
+            5
+        ],
+        "children": [
+            7
+        ],
+        "ifms_shape": [
+            1,
+            112,
+            112,
+            128
+        ],
+        "ofms_shape": [
+            1,
+            56,
+            56,
+            128
+        ],
+        "ofms_scales": 51.50186538696289,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 7,
+        "activation": "RELU",
+        "parents": [
+            6
+        ],
+        "children": [
+            8
+        ],
+        "ifms_scales": 51.50186538696289,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            256,
+            128,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            128,
+            56,
+            56
+        ],
+        "ofms_shape": [
+            256,
+            56,
+            56
+        ],
+        "strides": 1,
+        "ofms_scales": 86.5413818359375,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 8,
+        "activation": "RELU",
+        "parents": [
+            7
+        ],
+        "children": [
+            9
+        ],
+        "ifms_scales": 86.5413818359375,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            256,
+            256,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            256,
+            56,
+            56
+        ],
+        "ofms_shape": [
+            256,
+            56,
+            56
+        ],
+        "strides": 1,
+        "ofms_scales": 65.01078796386719,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 9,
+        "activation": "RELU",
+        "parents": [
+            8
+        ],
+        "children": [
+            10
+        ],
+        "ifms_scales": 65.01078796386719,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            256,
+            256,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            256,
+            56,
+            56
+        ],
+        "ofms_shape": [
+            256,
+            56,
+            56
+        ],
+        "strides": 1,
+        "ofms_scales": 78.90459442138672,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "max_pool_2d",
+        "id": 10,
+        "activation": "0",
+        "parents": [
+            9
+        ],
+        "children": [
+            11
+        ],
+        "ifms_shape": [
+            1,
+            56,
+            56,
+            256
+        ],
+        "ofms_shape": [
+            1,
+            28,
+            28,
+            256
+        ],
+        "ofms_scales": 78.90459442138672,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 11,
+        "activation": "RELU",
+        "parents": [
+            10
+        ],
+        "children": [
+            12
+        ],
+        "ifms_scales": 78.90459442138672,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            512,
+            256,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            256,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            512,
+            28,
+            28
+        ],
+        "strides": 1,
+        "ofms_scales": 54.71662902832031,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 12,
+        "activation": "RELU",
+        "parents": [
+            11
+        ],
+        "children": [
+            13
+        ],
+        "ifms_scales": 54.71662902832031,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            512,
+            512,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            512,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            512,
+            28,
+            28
+        ],
+        "strides": 1,
+        "ofms_scales": 28.510417938232422,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 13,
+        "activation": "RELU",
+        "parents": [
+            12
+        ],
+        "children": [
+            14
+        ],
+        "ifms_scales": 28.510417938232422,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            512,
+            512,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            512,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            512,
+            28,
+            28
+        ],
+        "strides": 1,
+        "ofms_scales": 15.443092346191406,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "max_pool_2d",
+        "id": 14,
+        "activation": "0",
+        "parents": [
+            13
+        ],
+        "children": [
+            15
+        ],
+        "ifms_shape": [
+            1,
+            28,
+            28,
+            512
+        ],
+        "ofms_shape": [
+            1,
+            14,
+            14,
+            512
+        ],
+        "ofms_scales": 15.443092346191406,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 15,
+        "activation": "RELU",
+        "parents": [
+            14
+        ],
+        "children": [
+            16
+        ],
+        "ifms_scales": 15.443092346191406,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            512,
+            512,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            512,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            512,
+            14,
+            14
+        ],
+        "strides": 1,
+        "ofms_scales": 11.563364028930664,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 16,
+        "activation": "RELU",
+        "parents": [
+            15
+        ],
+        "children": [
+            17
+        ],
+        "ifms_scales": 11.563364028930664,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            512,
+            512,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            512,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            512,
+            14,
+            14
+        ],
+        "strides": 1,
+        "ofms_scales": 5.523056983947754,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "conv_2d",
+        "id": 17,
+        "activation": "RELU",
+        "parents": [
+            16
+        ],
+        "children": [
+            18
+        ],
+        "ifms_scales": 5.523056983947754,
+        "ifms_zero_points": -128,
+        "type": "s",
+        "weights_shape": [
+            512,
+            512,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            512,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            512,
+            14,
+            14
+        ],
+        "strides": 1,
+        "ofms_scales": 2.9793701171875,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "max_pool_2d",
+        "id": 18,
+        "activation": "0",
+        "parents": [
+            17
+        ],
+        "children": [
+            19
+        ],
+        "ifms_shape": [
+            1,
+            14,
+            14,
+            512
+        ],
+        "ofms_shape": [
+            1,
+            7,
+            7,
+            512
+        ],
+        "ofms_scales": 2.9793701171875,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "reshape",
+        "id": 19,
+        "activation": "0",
+        "parents": [
+            18
+        ],
+        "children": [
+            20
+        ],
+        "ifms_shape": [
+            1,
+            7,
+            7,
+            512
+        ],
+        "ofms_shape": [
+            1,
+            25088
+        ],
+        "ofms_scales": 2.9793701171875,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "fully_connected",
+        "id": 20,
+        "activation": "RELU",
+        "parents": [
+            19
+        ],
+        "children": [
+            21
+        ],
+        "ifms_scales": 2.9793701171875,
+        "ifms_zero_points": -128,
+        "type": "fc",
+        "weights_shape": [
+            4096,
+            25088
+        ],
+        "ifms_shape": [
+            1,
+            25088
+        ],
+        "ofms_shape": [
+            1,
+            4096
+        ],
+        "strides": 6,
+        "ofms_scales": 0.32980233430862427,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "fully_connected",
+        "id": 21,
+        "activation": "RELU",
+        "parents": [
+            20
+        ],
+        "children": [
+            22
+        ],
+        "ifms_scales": 0.32980233430862427,
+        "ifms_zero_points": -128,
+        "type": "fc",
+        "weights_shape": [
+            4096,
+            4096
+        ],
+        "ifms_shape": [
+            1,
+            4096
+        ],
+        "ofms_shape": [
+            1,
+            4096
+        ],
+        "strides": 1,
+        "ofms_scales": 0.09472227096557617,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "fully_connected",
+        "id": 22,
+        "activation": "0",
+        "parents": [
+            21
+        ],
+        "children": [
+            23
+        ],
+        "ifms_scales": 0.09472227096557617,
+        "ifms_zero_points": -128,
+        "type": "fc",
+        "weights_shape": [
+            1000,
+            4096
+        ],
+        "ifms_shape": [
+            1,
+            4096
+        ],
+        "ofms_shape": [
+            1,
+            1000
+        ],
+        "strides": 4,
+        "ofms_scales": 0.19540826976299286,
+        "ofms_zero_points": -76
+    },
+    {
+        "name": "softmax",
+        "id": 23,
+        "activation": "0",
+        "parents": [
+            22
+        ],
+        "children": [
+            24
+        ],
+        "ifms_shape": [
+            1,
+            1000
+        ],
+        "ofms_shape": [
+            1,
+            1000
+        ],
+        "ofms_scales": 0.00390625,
+        "ofms_zero_points": -128
+    },
+    {
+        "name": "quantize",
+        "id": 24,
+        "activation": "0",
+        "parents": [
+            23
+        ],
+        "children": [],
+        "ifms_shape": [
+            1,
+            1000
+        ],
+        "ofms_shape": [
+            1,
+            1000
+        ],
+        "ofms_scales": 0.00390625,
+        "ofms_zero_points": 0
+    }
+]

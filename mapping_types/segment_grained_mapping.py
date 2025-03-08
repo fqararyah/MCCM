@@ -6,9 +6,9 @@ from engines.engine import *
 from .seml_mapping_lbl import *
 from .seml_mapping_fused import *
 from hw_config import *
-import mapping_utils.mapping_general_utils as mapping_general_utils
+import mapping_utils
 import copy
-import random
+
 
 class SegmentMapping(GenericMapping):
     EXTRA_MEMORY_OVERHEADS_W = 0
@@ -22,9 +22,8 @@ class SegmentMapping(GenericMapping):
                  first_layer_ifms_are_on_chip=False,
                  last_layer_ofms_are_on_chip=False,
                  fused_engines=False,
-                 exec_v2= True):
+                 exec_v2= False):
         super().__init__(hw_config, layers, engines)
-        random.seed(5)
         self.rows_to_produce_in_pipe_pass = rows_to_produce_in_pipe_pass
         self.engine_layer_map = {}
         self.engine_layer_offset_map = {}
@@ -123,9 +122,6 @@ class SegmentMapping(GenericMapping):
             # resources are going to be idle most of the time
             first_layer_ifms_are_on_chip = True
             last_layer_ofms_are_on_chip = True
-            pw_conv_parallelization_strategy = ParallelizationStrategies.OFMS_H_W
-            if constants.USE_BSAELINES_OWN_PARALLELIZTION_STRATEGIES:
-                pw_conv_parallelization_strategy = ParallelizationStrategies.OFMS_IFM
             if i == 0:
                 first_layer_ifms_are_on_chip = False
             if i == self.num_engines - 1:
@@ -138,10 +134,8 @@ class SegmentMapping(GenericMapping):
             else:
                 self.engines_mappings.append(SEMLMapping_LBL(self.segments_hw_configs[i],
                                                              self.model_dag, self.engine_layer_map[i],
-                                                             pw_conv_parallelization_strategy=pw_conv_parallelization_strategy,
                                                              first_layer_ifms_are_on_chip=first_layer_ifms_are_on_chip,
-                                                             last_layer_ofms_are_on_chip=last_layer_ofms_are_on_chip, 
-                                                             exec_v2 = self.exec_v2))
+                                                             last_layer_ofms_are_on_chip=last_layer_ofms_are_on_chip, exec_v2 = self.exec_v2))
 
     def get_engine_layer_mapping(self):
         return self.engine_layer_map
@@ -347,34 +341,4 @@ class SegmentMapping(GenericMapping):
 
         return off_chip_fms_access
     
-    def get_dict_representation(self):
-        mapping_dict = {}
-        starting_engine = 0
-        starting_layer = 0
-        for engine_index in range(self.num_engines):
-            num_layers = len(self.engine_layer_map[engine_index])
-            layers_str = str(starting_layer)
-            engines_str = str(starting_engine)
-            if num_layers > 1:
-                layers_str += '-{}'.format(starting_layer + num_layers)
-
-            starting_engine += 1
-            starting_layer += num_layers
-            
-            mapping_dict[layers_str] = engines_str
-
-        return mapping_dict
     
-    def calc_energy(self):
-        energy_cons = 0
-        #energy_cons_breakdown = {}
-        for layer_group_index in range(self.num_engines):
-            #cons, cons_breakdown = self.engines_mappings[layer_group_index].calc_energy()
-            cons = self.engines_mappings[layer_group_index].calc_energy()
-            energy_cons += cons
-            # for component, component_energy in cons_breakdown.items():
-            #     if component not in energy_cons_breakdown:
-            #         energy_cons_breakdown[component] = 0
-            #     energy_cons_breakdown[component] += component_energy
-
-        return energy_cons#, energy_cons_breakdown

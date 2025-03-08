@@ -72,10 +72,11 @@ def overleaf_table_format(data):
 
 def read_board_names(file_name=constants.HW_CONFIGS_FILE):
     board_names = []
-    f = open(file_name)
-    content = json.load(f)
-    for entry in content:
-        board_names.append(entry['board_name'])
+    if os.path.exists(file_name):
+        f = open(file_name)
+        content = json.load(f)
+        for entry in content:
+            board_names.append(entry['board_name'])
 
     return board_names
 

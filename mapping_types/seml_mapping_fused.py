@@ -1,5 +1,5 @@
 
-from generic_mapping import GenericMapping
+from .generic_mapping import GenericMapping
 import __init__
 import utils
 from engines.engine import *

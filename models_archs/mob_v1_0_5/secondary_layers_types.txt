@@ -1,0 +1,5 @@
+pad
+mean
+shape
+strided_slice
+reshape

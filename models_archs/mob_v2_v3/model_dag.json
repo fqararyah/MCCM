@@ -1,0 +1,1916 @@
+[
+    {
+        "name": "quantize",
+        "id": 0,
+        "parents": [],
+        "ofms_scales": [
+            0.007843137718737125
+        ],
+        "ofms_zero_points": [
+            -1.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 1,
+        "parents": [
+            0
+        ],
+        "type": "s",
+        "weights_shape": [
+            32,
+            3,
+            3,
+            3
+        ],
+        "ifms_shape": [
+            3,
+            224,
+            224
+        ],
+        "ofms_shape": [
+            32,
+            112,
+            112
+        ],
+        "strides": 2,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 2,
+        "parents": [
+            1
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            32,
+            112,
+            112
+        ],
+        "ofms_shape": [
+            32,
+            112,
+            112
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 3,
+        "parents": [
+            2
+        ],
+        "type": "pw",
+        "weights_shape": [
+            16,
+            1
+        ],
+        "ifms_shape": [
+            32,
+            112,
+            112
+        ],
+        "ofms_shape": [
+            16,
+            112,
+            112
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.3762853741645813
+        ],
+        "ofms_zero_points": [
+            4.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 4,
+        "parents": [
+            3
+        ],
+        "type": "pw",
+        "weights_shape": [
+            96,
+            1
+        ],
+        "ifms_shape": [
+            16,
+            112,
+            112
+        ],
+        "ofms_shape": [
+            96,
+            112,
+            112
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "pad",
+        "id": 5,
+        "parents": [
+            4
+        ],
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 6,
+        "parents": [
+            5
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            96,
+            113,
+            113
+        ],
+        "ofms_shape": [
+            96,
+            56,
+            56
+        ],
+        "strides": 2,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 7,
+        "parents": [
+            6
+        ],
+        "type": "pw",
+        "weights_shape": [
+            24,
+            1
+        ],
+        "ifms_shape": [
+            96,
+            56,
+            56
+        ],
+        "ofms_shape": [
+            24,
+            56,
+            56
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.30003005266189575
+        ],
+        "ofms_zero_points": [
+            -11.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 8,
+        "parents": [
+            7
+        ],
+        "type": "pw",
+        "weights_shape": [
+            144,
+            1
+        ],
+        "ifms_shape": [
+            24,
+            56,
+            56
+        ],
+        "ofms_shape": [
+            144,
+            56,
+            56
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 9,
+        "parents": [
+            8
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            144,
+            56,
+            56
+        ],
+        "ofms_shape": [
+            144,
+            56,
+            56
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 10,
+        "parents": [
+            9
+        ],
+        "type": "pw",
+        "weights_shape": [
+            24,
+            1
+        ],
+        "ifms_shape": [
+            144,
+            56,
+            56
+        ],
+        "ofms_shape": [
+            24,
+            56,
+            56
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.38619235157966614
+        ],
+        "ofms_zero_points": [
+            17.0
+        ]
+    },
+    {
+        "name": "add",
+        "id": 11,
+        "parents": [
+            7,
+            10
+        ],
+        "ifms_scales": [
+            0.30003005266189575,
+            0.38619235157966614
+        ],
+        "ifms_zero_points": [
+            -11.0,
+            17.0
+        ],
+        "ofms_scales": [
+            0.4552610218524933
+        ],
+        "ofms_zero_points": [
+            6.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 12,
+        "parents": [
+            11
+        ],
+        "type": "pw",
+        "weights_shape": [
+            144,
+            1
+        ],
+        "ifms_shape": [
+            24,
+            56,
+            56
+        ],
+        "ofms_shape": [
+            144,
+            56,
+            56
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "pad",
+        "id": 13,
+        "parents": [
+            12
+        ],
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 14,
+        "parents": [
+            13
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            144,
+            57,
+            57
+        ],
+        "ofms_shape": [
+            144,
+            28,
+            28
+        ],
+        "strides": 2,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 15,
+        "parents": [
+            14
+        ],
+        "type": "pw",
+        "weights_shape": [
+            32,
+            1
+        ],
+        "ifms_shape": [
+            144,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            32,
+            28,
+            28
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.21887806057929993
+        ],
+        "ofms_zero_points": [
+            -6.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 16,
+        "parents": [
+            15
+        ],
+        "type": "pw",
+        "weights_shape": [
+            192,
+            1
+        ],
+        "ifms_shape": [
+            32,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            192,
+            28,
+            28
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 17,
+        "parents": [
+            16
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            192,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            192,
+            28,
+            28
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 18,
+        "parents": [
+            17
+        ],
+        "type": "pw",
+        "weights_shape": [
+            32,
+            1
+        ],
+        "ifms_shape": [
+            192,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            32,
+            28,
+            28
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.22161531448364258
+        ],
+        "ofms_zero_points": [
+            -8.0
+        ]
+    },
+    {
+        "name": "add",
+        "id": 19,
+        "parents": [
+            15,
+            18
+        ],
+        "ifms_scales": [
+            0.21887806057929993,
+            0.22161531448364258
+        ],
+        "ifms_zero_points": [
+            -6.0,
+            -8.0
+        ],
+        "ofms_scales": [
+            0.25395748019218445
+        ],
+        "ofms_zero_points": [
+            3.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 20,
+        "parents": [
+            19
+        ],
+        "type": "pw",
+        "weights_shape": [
+            192,
+            1
+        ],
+        "ifms_shape": [
+            32,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            192,
+            28,
+            28
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 21,
+        "parents": [
+            20
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            192,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            192,
+            28,
+            28
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 22,
+        "parents": [
+            21
+        ],
+        "type": "pw",
+        "weights_shape": [
+            32,
+            1
+        ],
+        "ifms_shape": [
+            192,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            32,
+            28,
+            28
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.26030266284942627
+        ],
+        "ofms_zero_points": [
+            -19.0
+        ]
+    },
+    {
+        "name": "add",
+        "id": 23,
+        "parents": [
+            19,
+            22
+        ],
+        "ifms_scales": [
+            0.25395748019218445,
+            0.26030266284942627
+        ],
+        "ifms_zero_points": [
+            3.0,
+            -19.0
+        ],
+        "ofms_scales": [
+            0.37459200620651245
+        ],
+        "ofms_zero_points": [
+            -17.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 24,
+        "parents": [
+            23
+        ],
+        "type": "pw",
+        "weights_shape": [
+            192,
+            1
+        ],
+        "ifms_shape": [
+            32,
+            28,
+            28
+        ],
+        "ofms_shape": [
+            192,
+            28,
+            28
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "pad",
+        "id": 25,
+        "parents": [
+            24
+        ],
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 26,
+        "parents": [
+            25
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            192,
+            29,
+            29
+        ],
+        "ofms_shape": [
+            192,
+            14,
+            14
+        ],
+        "strides": 2,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 27,
+        "parents": [
+            26
+        ],
+        "type": "pw",
+        "weights_shape": [
+            64,
+            1
+        ],
+        "ifms_shape": [
+            192,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            64,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.17392461001873016
+        ],
+        "ofms_zero_points": [
+            -2.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 28,
+        "parents": [
+            27
+        ],
+        "type": "pw",
+        "weights_shape": [
+            384,
+            1
+        ],
+        "ifms_shape": [
+            64,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            384,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 29,
+        "parents": [
+            28
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            384,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            384,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 30,
+        "parents": [
+            29
+        ],
+        "type": "pw",
+        "weights_shape": [
+            64,
+            1
+        ],
+        "ifms_shape": [
+            384,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            64,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.1939420849084854
+        ],
+        "ofms_zero_points": [
+            -15.0
+        ]
+    },
+    {
+        "name": "add",
+        "id": 31,
+        "parents": [
+            27,
+            30
+        ],
+        "ifms_scales": [
+            0.17392461001873016,
+            0.1939420849084854
+        ],
+        "ifms_zero_points": [
+            -2.0,
+            -15.0
+        ],
+        "ofms_scales": [
+            0.19507721066474915
+        ],
+        "ofms_zero_points": [
+            -14.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 32,
+        "parents": [
+            31
+        ],
+        "type": "pw",
+        "weights_shape": [
+            384,
+            1
+        ],
+        "ifms_shape": [
+            64,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            384,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 33,
+        "parents": [
+            32
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            384,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            384,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 34,
+        "parents": [
+            33
+        ],
+        "type": "pw",
+        "weights_shape": [
+            64,
+            1
+        ],
+        "ifms_shape": [
+            384,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            64,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.15376076102256775
+        ],
+        "ofms_zero_points": [
+            -16.0
+        ]
+    },
+    {
+        "name": "add",
+        "id": 35,
+        "parents": [
+            31,
+            34
+        ],
+        "ifms_scales": [
+            0.19507721066474915,
+            0.15376076102256775
+        ],
+        "ifms_zero_points": [
+            -14.0,
+            -16.0
+        ],
+        "ofms_scales": [
+            0.21177388727664948
+        ],
+        "ofms_zero_points": [
+            -10.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 36,
+        "parents": [
+            35
+        ],
+        "type": "pw",
+        "weights_shape": [
+            384,
+            1
+        ],
+        "ifms_shape": [
+            64,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            384,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 37,
+        "parents": [
+            36
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            384,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            384,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 38,
+        "parents": [
+            37
+        ],
+        "type": "pw",
+        "weights_shape": [
+            64,
+            1
+        ],
+        "ifms_shape": [
+            384,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            64,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.16587591171264648
+        ],
+        "ofms_zero_points": [
+            -12.0
+        ]
+    },
+    {
+        "name": "add",
+        "id": 39,
+        "parents": [
+            35,
+            38
+        ],
+        "ifms_scales": [
+            0.21177388727664948,
+            0.16587591171264648
+        ],
+        "ifms_zero_points": [
+            -10.0,
+            -12.0
+        ],
+        "ofms_scales": [
+            0.23638635873794556
+        ],
+        "ofms_zero_points": [
+            -7.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 40,
+        "parents": [
+            39
+        ],
+        "type": "pw",
+        "weights_shape": [
+            384,
+            1
+        ],
+        "ifms_shape": [
+            64,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            384,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 41,
+        "parents": [
+            40
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            384,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            384,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 42,
+        "parents": [
+            41
+        ],
+        "type": "pw",
+        "weights_shape": [
+            96,
+            1
+        ],
+        "ifms_shape": [
+            384,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            96,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.1662880778312683
+        ],
+        "ofms_zero_points": [
+            12.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 43,
+        "parents": [
+            42
+        ],
+        "type": "pw",
+        "weights_shape": [
+            576,
+            1
+        ],
+        "ifms_shape": [
+            96,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            576,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 44,
+        "parents": [
+            43
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            576,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            576,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 45,
+        "parents": [
+            44
+        ],
+        "type": "pw",
+        "weights_shape": [
+            96,
+            1
+        ],
+        "ifms_shape": [
+            576,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            96,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.12118788063526154
+        ],
+        "ofms_zero_points": [
+            10.0
+        ]
+    },
+    {
+        "name": "add",
+        "id": 46,
+        "parents": [
+            42,
+            45
+        ],
+        "ifms_scales": [
+            0.1662880778312683,
+            0.12118788063526154
+        ],
+        "ifms_zero_points": [
+            12.0,
+            10.0
+        ],
+        "ofms_scales": [
+            0.17485639452934265
+        ],
+        "ofms_zero_points": [
+            5.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 47,
+        "parents": [
+            46
+        ],
+        "type": "pw",
+        "weights_shape": [
+            576,
+            1
+        ],
+        "ifms_shape": [
+            96,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            576,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 48,
+        "parents": [
+            47
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            576,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            576,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 49,
+        "parents": [
+            48
+        ],
+        "type": "pw",
+        "weights_shape": [
+            96,
+            1
+        ],
+        "ifms_shape": [
+            576,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            96,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.18612954020500183
+        ],
+        "ofms_zero_points": [
+            9.0
+        ]
+    },
+    {
+        "name": "add",
+        "id": 50,
+        "parents": [
+            46,
+            49
+        ],
+        "ifms_scales": [
+            0.17485639452934265,
+            0.18612954020500183
+        ],
+        "ifms_zero_points": [
+            5.0,
+            9.0
+        ],
+        "ofms_scales": [
+            0.27631041407585144
+        ],
+        "ofms_zero_points": [
+            -2.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 51,
+        "parents": [
+            50
+        ],
+        "type": "pw",
+        "weights_shape": [
+            576,
+            1
+        ],
+        "ifms_shape": [
+            96,
+            14,
+            14
+        ],
+        "ofms_shape": [
+            576,
+            14,
+            14
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "pad",
+        "id": 52,
+        "parents": [
+            51
+        ],
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 53,
+        "parents": [
+            52
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            576,
+            15,
+            15
+        ],
+        "ofms_shape": [
+            576,
+            7,
+            7
+        ],
+        "strides": 2,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 54,
+        "parents": [
+            53
+        ],
+        "type": "pw",
+        "weights_shape": [
+            160,
+            1
+        ],
+        "ifms_shape": [
+            576,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            160,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.12638017535209656
+        ],
+        "ofms_zero_points": [
+            1.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 55,
+        "parents": [
+            54
+        ],
+        "type": "pw",
+        "weights_shape": [
+            960,
+            1
+        ],
+        "ifms_shape": [
+            160,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            960,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 56,
+        "parents": [
+            55
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            960,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            960,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 57,
+        "parents": [
+            56
+        ],
+        "type": "pw",
+        "weights_shape": [
+            160,
+            1
+        ],
+        "ifms_shape": [
+            960,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            160,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.09578371047973633
+        ],
+        "ofms_zero_points": [
+            -6.0
+        ]
+    },
+    {
+        "name": "add",
+        "id": 58,
+        "parents": [
+            54,
+            57
+        ],
+        "ifms_scales": [
+            0.12638017535209656,
+            0.09578371047973633
+        ],
+        "ifms_zero_points": [
+            1.0,
+            -6.0
+        ],
+        "ofms_scales": [
+            0.14546272158622742
+        ],
+        "ofms_zero_points": [
+            4.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 59,
+        "parents": [
+            58
+        ],
+        "type": "pw",
+        "weights_shape": [
+            960,
+            1
+        ],
+        "ifms_shape": [
+            160,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            960,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 60,
+        "parents": [
+            59
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            960,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            960,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 61,
+        "parents": [
+            60
+        ],
+        "type": "pw",
+        "weights_shape": [
+            160,
+            1
+        ],
+        "ifms_shape": [
+            960,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            160,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.2120801955461502
+        ],
+        "ofms_zero_points": [
+            5.0
+        ]
+    },
+    {
+        "name": "add",
+        "id": 62,
+        "parents": [
+            58,
+            61
+        ],
+        "ifms_scales": [
+            0.14546272158622742,
+            0.2120801955461502
+        ],
+        "ifms_zero_points": [
+            4.0,
+            5.0
+        ],
+        "ofms_scales": [
+            0.29830634593963623
+        ],
+        "ofms_zero_points": [
+            4.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 63,
+        "parents": [
+            62
+        ],
+        "type": "pw",
+        "weights_shape": [
+            960,
+            1
+        ],
+        "ifms_shape": [
+            160,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            960,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "depthwise_conv_2d",
+        "id": 64,
+        "parents": [
+            63
+        ],
+        "type": "dw",
+        "weights_shape": [
+            3,
+            1,
+            3
+        ],
+        "ifms_shape": [
+            960,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            960,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 65,
+        "parents": [
+            64
+        ],
+        "type": "pw",
+        "weights_shape": [
+            320,
+            1
+        ],
+        "ifms_shape": [
+            960,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            320,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "0",
+        "ofms_scales": [
+            0.1458444595336914
+        ],
+        "ofms_zero_points": [
+            40.0
+        ]
+    },
+    {
+        "name": "conv_2d",
+        "id": 66,
+        "parents": [
+            65
+        ],
+        "type": "pw",
+        "weights_shape": [
+            1280,
+            1
+        ],
+        "ifms_shape": [
+            320,
+            7,
+            7
+        ],
+        "ofms_shape": [
+            1280,
+            7,
+            7
+        ],
+        "strides": 1,
+        "activation": "relu6",
+        "ofms_scales": [
+            0.0235294122248888
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "mean",
+        "id": 67,
+        "parents": [
+            66
+        ],
+        "ofms_scales": [
+            0.020379824563860893
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "fully_connected",
+        "id": 68,
+        "parents": [
+            67
+        ],
+        "ofms_scales": [
+            0.07442259788513184
+        ],
+        "ofms_zero_points": [
+            -59.0
+        ]
+    },
+    {
+        "name": "softmax",
+        "id": 69,
+        "parents": [
+            68
+        ],
+        "ofms_scales": [
+            0.00390625
+        ],
+        "ofms_zero_points": [
+            -128.0
+        ]
+    },
+    {
+        "name": "quantize",
+        "id": 70,
+        "parents": [
+            69
+        ],
+        "ofms_scales": [
+            0.00390625
+        ],
+        "ofms_zero_points": [
+            0.0
+        ]
+    }
+]
