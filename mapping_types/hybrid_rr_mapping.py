@@ -9,8 +9,9 @@ from .sesl_mapping import *
 from .segment_grained_mapping_rr import *
 from hw_config import *
 import copy
+from basic_mapping import BasicMapping
 
-class HybridRRMapping(GenericMapping):
+class HybridRRMapping(BasicMapping):
     DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS = 1
     FIRST_PART_DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS = 1
 
@@ -20,10 +21,9 @@ class HybridRRMapping(GenericMapping):
                  first_layer_ifms_are_on_chip=False,
                  last_layer_ofms_are_on_chip=False,
                  fuse_in_the_second_part=False):
-        super().__init__(hw_config, layers, [])
+        super().__init__(hw_config, model_dag, layers, [])
         self.rows_to_produce_in_pipe_pass = rows_to_produce_in_pipe_pass
         self.first_part_rows_to_produce_in_pipe_pass = first_part_rows_to_produce_in_pipe_pass
-        self.model_dag = model_dag
         self.all_pes = hw_config.num_pes
         self.num_layers = len(layers)
         self.segment_rr_mapping_num_engines = segment_rr_mapping_num_engines

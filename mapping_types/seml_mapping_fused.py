@@ -3,21 +3,21 @@ from .generic_mapping import GenericMapping
 import __init__
 import utils
 from engines.engine import *
+from basic_mapping import BasicMapping
 
 
-class SEMLMapping_FUSED(GenericMapping):
+class SEMLMapping_FUSED(BasicMapping):
     DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS = 1
 
     def __init__(self, hw_config, model_dag, layers,
                  rows_to_produce_in_pipe_pass=DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS,
                  first_layer_ifms_are_on_chip=False,
                  last_layer_ofms_are_on_chip=False):
-        super().__init__(hw_config, layers, [],
+        super().__init__(hw_config, model_dag, layers, [],
                          first_layer_ifms_are_on_chip, last_layer_ofms_are_on_chip)
         has_dw_layers = utils.has_dw_layers(model_dag, layers[0], len(layers))
         engines = []
         self.rows_to_produce_in_pipe_pass = rows_to_produce_in_pipe_pass
-        self.model_dag = model_dag
         if has_dw_layers:
             engines = [Engine(1, parallelization_strategy=ParallelizationStrategies.IN_FILTER_H_W)]
         else:

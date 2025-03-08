@@ -8,9 +8,10 @@ from .seml_mapping_fused import *
 from hw_config import *
 import mapping_utils
 import copy
+from basic_mapping import BasicMapping
 
 
-class SegmentMapping(GenericMapping):
+class SegmentMapping(BasicMapping):
     EXTRA_MEMORY_OVERHEADS_W = 0
     EXTRA_MEMORY_OVERHEADS_FM = 0
     EXTRA_MEMORY_OVERHEADS_CONST = 0 * constants.KiB
@@ -23,11 +24,10 @@ class SegmentMapping(GenericMapping):
                  last_layer_ofms_are_on_chip=False,
                  fused_engines=False,
                  exec_v2= False):
-        super().__init__(hw_config, layers, engines)
+        super().__init__(hw_config, model_dag, layers, engines)
         self.rows_to_produce_in_pipe_pass = rows_to_produce_in_pipe_pass
         self.engine_layer_map = {}
         self.engine_layer_offset_map = {}
-        self.model_dag = model_dag
         self.mapping_pes = hw_config.num_pes
         self.exec_time = -1
         self.engine_group_pes = []

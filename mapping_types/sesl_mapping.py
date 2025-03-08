@@ -4,9 +4,10 @@ from generic_mapping import GenericMapping
 import utils
 from engines.engine import *
 import constants
+from basic_mapping import BasicMapping
 
 
-class SESLMapping(GenericMapping):
+class SESLMapping(BasicMapping):
     DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS = 1
     MAPPING_LABEL = 'SESL'
 
@@ -17,10 +18,9 @@ class SESLMapping(GenericMapping):
                  last_layer_ofms_are_on_chip=False,
                  engine_parallelization_strategy=ParallelizationStrategies.OFMS_H_W):
 
-        super().__init__(hw_config, layers, engines,
+        super().__init__(hw_config, model_dag, layers, engines,
                          first_layer_ifms_are_on_chip, last_layer_ofms_are_on_chip)
         self.rows_to_produce_in_pipe_pass = rows_to_produce_in_pipe_pass
-        self.model_dag = model_dag
         self.exec_time = -1
         self.num_engines = len(self.layers)
         self.engine_parallelization_strategy = engine_parallelization_strategy

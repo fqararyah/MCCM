@@ -3,16 +3,17 @@ import __init__
 from generic_mapping import GenericMapping
 import utils
 from engines.engine import *
+from basic_mapping import BasicMapping
 
 
-class SEMLMapping_LBL(GenericMapping):
+class SEMLMapping_LBL(BasicMapping):
 
     MAPPING_LABEL = 'SEML_LBL'
     def __init__(self, hw_config, model_dag, layers,
                  first_layer_ifms_are_on_chip=False,
                  last_layer_ofms_are_on_chip=False,
                  exec_v2 = False):
-        super().__init__(hw_config, layers, [],
+        super().__init__(hw_config, model_dag, layers, [],
                          first_layer_ifms_are_on_chip, last_layer_ofms_are_on_chip)
         has_dw_layers = utils.has_dw_layers(model_dag, layers[0], len(layers))
         engines = []
@@ -22,7 +23,6 @@ class SEMLMapping_LBL(GenericMapping):
         else:
             engines = [Engine(hw_config.num_pes)]
         self.engines = engines
-        self.model_dag = model_dag
         self.mapping_pes = hw_config.num_pes
         self.num_engines = len(engines)
         self.num_layers = len(layers)

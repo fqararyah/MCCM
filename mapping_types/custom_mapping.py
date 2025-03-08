@@ -10,6 +10,8 @@ from .segment_grained_mapping_rr import *
 from hw_config import *
 import copy
 import mapping_utils.mapping_general_utils as mapping_utils
+from basic_mapping import BasicMapping
+
 
 def infer_mapping_types(mapping_details, model_dag):
     mappings_segments_list = []
@@ -29,7 +31,7 @@ def infer_mapping_types(mapping_details, model_dag):
 
     return mappings_segments_list
 
-class CustomMapping(GenericMapping):
+class CustomMapping(BasicMapping):
     DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS = 1
     MAPPING_LABEL = 'Custom'
 
@@ -39,7 +41,7 @@ class CustomMapping(GenericMapping):
                  last_layer_ofms_are_on_chip=False,
                  apply_fusion=False):
 
-        super().__init__(hw_config, layers, [])
+        super().__init__(hw_config, model_dag, layers, [])
         self.rows_to_produce_in_pipe_pass = rows_to_produce_in_pipe_pass
         self.model_dag = model_dag
         self.num_layers = len(layers)

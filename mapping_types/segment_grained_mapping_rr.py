@@ -4,8 +4,9 @@ import __init__
 import utils
 from engines.engine import *
 import constants
+from basic_mapping import BasicMapping
 
-class SegmentMappingRR(GenericMapping):
+class SegmentMappingRR(BasicMapping):
     EXTRA_MEMORY_OVERHEADS_W = 0#0.05
     EXTRA_MEMORY_OVERHEADS_FM = 0#0.05
     EXTRA_MEMORY_OVERHEADS_CONST = 0 * constants.KiB
@@ -16,12 +17,11 @@ class SegmentMappingRR(GenericMapping):
                  rows_to_produce_in_pipe_pass=DEFAULT_ROWS_TO_PRODUCE_IN_A_PASS,
                  first_layer_ifms_are_on_chip=False,
                  last_layer_ofms_are_on_chip=False):
-        super().__init__(hw_config, layers, engines, first_layer_ifms_are_on_chip,
+        super().__init__(hw_config, model_dag, layers, engines, first_layer_ifms_are_on_chip,
                          last_layer_ofms_are_on_chip)
         self.rows_to_produce_in_pipe_pass = rows_to_produce_in_pipe_pass
         self.engine_layer_map = {}
         self.engine_layer_offset_map = {}
-        self.model_dag = model_dag
         self.mapping_pes = hw_config.num_pes
         self.num_layers = len(layers)
         self.group_weights_on_chip = []
