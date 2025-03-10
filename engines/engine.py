@@ -6,19 +6,14 @@ import mapping_utils.mapping_general_utils as mapping_general_utils
 from generic_engine import *
 
 
-class Engine():
+class Engine(GenericEngine):
 
     MIN_OFMS_PARALLEL = 8
 
     def __init__(self, num_pes, par_ofms=1, par_ifms=1, par_width=1, par_height=1, par_in_filter=1,
                  parallelization_strategy=ParallelizationStrategies.OFMS_H_W):
-        self.num_pes = num_pes
-        self.par_ofms = par_ofms
-        self.par_ifms = par_ifms
-        self.par_height = par_height
-        self.par_width = par_width
-        self.par_in_filter = par_in_filter
-        self.parallelization_strategy = parallelization_strategy
+        super().__init__(num_pes, par_ofms, par_ifms, par_height, par_width,
+                         par_in_filter, parallelization_strategy)
 
     def scale_dims_ofms_h_w(self, min_layer_filters, min_layer_height, min_layer_width,
                             par_ofms, par_h, par_w,

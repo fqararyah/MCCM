@@ -25,7 +25,7 @@ class GenericMapping(ABC):
 
         Parameters:
         hw_config (HWConfig): basic HW configurations, see HWConfig Class.
-        model_dag (dict): DNN model description.
+        model_dag (dict): modeld description.
         layers (list): in case the mapping targets subset of the layers rather than the whole model.
         engines (list): in case the engines configurations are already specified.
         first_layer_ifms_are_on_chip (boolean): in case the mapping targets subet of the model and the input
@@ -116,4 +116,8 @@ class GenericMapping(ABC):
         list: per-segment execution time.
         '''
 
+        pass
+
+    @abstractmethod
+    def calc_energy(self):
         pass
