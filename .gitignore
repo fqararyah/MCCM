@@ -15,3 +15,4 @@ ign*
 **/figures_p2/**
 **/tmp/**
 **/timing*/*.json
+!**/paper_figures/*
