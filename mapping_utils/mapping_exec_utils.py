@@ -5,10 +5,7 @@ from mapping_types.segment_grained_mapping_rr import *
 from preformance_record import *
 import constants as consts
 import mapping_utils.custom_mapping_utils as custom_mapping_utils
-import optimizers.simulated_annealing as sa
-import optimizers.genetic_algorithm as ga
 from datetime import datetime
-import optimizers.nsga as nsga2
 
 
 def get_file_prefix_from_metric_board_or_model_list(a_list):
@@ -69,15 +66,13 @@ def run_mapping(board_name, model_name, mapping):
     off_chip_fms_access = round(
         mapping.calc_off_chip_fms_access() / constants.MiB, 2)
     
-    energy = mapping.calc_energy()
-
     record = PerformanceRecord(board_name, model_name, mapping.get_label(),
                                mapping.get_num_engines(),
                                estimated_exec_time,
                                estimated_throughput,
                                on_chip_fms_buffer_sz, on_chip_weights_buffer_sz,
                                on_chip_buffer_sz,
-                               off_chip_fms_access, off_chip_weight_access, energy=energy)
+                               off_chip_fms_access, off_chip_weight_access)
 
     return record
 
@@ -163,254 +158,6 @@ def get_bests_of_mappings(board_name_list, model_name_list, mapping_label_list, 
                         [best_val, best_mapping_desc_dict]
 
     return best_in_metric_board_model_mapping_dict
-
-
-def run_nsga2_experiments(board_name_list, model_name_list, metric_list,
-                          number_of_generations, population_size,
-                          min_segments=constants.MIN_SEGMENTS,
-                          max_segments=constants.MAX_ENGINES_V2,
-                          print_timing=False):
-
-    best_in_metric_board_model = {}
-    num_models = len(model_name_list)
-    num_boards = len(board_name_list)
-    metrics_str = ''
-    for metric in metric_list:
-        timing_metric = Metrics.THROUGHPUT
-        metrics_str += constants.metric_display_names[metric].lower() + '_'
-        if metric == Metrics.LATENCY:
-            timing_metric = metric
-
-    for board_name in board_name_list:
-        best_in_metric_board_model[board_name] = {}
-        boards_str = board_name.lower()
-        for model_name in model_name_list:
-            models_str = model_name.lower()
-            model_dag = utils.read_model_dag_v2(
-                constants.MODEL_ARCH_DIR + model_name + '/model_dag.json')
-            best_in_metric_board_model[board_name][model_name] = {}
-            print(board_name, model_name)
-            custom_mapping, mapping_desc =\
-                custom_mapping_utils.generate_random_mapping(
-                    board_name, model_name, model_dag, 2, timing_metric)
-            population = nsga2.run_nsga2(
-                mapping_desc, metric_list, number_of_generations, population_size, min_segments=min_segments,
-                max_segments=max_segments, print_timing=print_timing)
-
-            population_dict_list = []
-            for mapping_desc in population:
-                population_dict_list.append(custom_mapping_utils.prepare_custom_mapping_desc(
-                    mapping_desc.segment_layers_list,
-                    mapping_desc.segment_block_list,
-                    mapping_desc.block_engines_list))
-
-            best_in_metric_board_model[board_name][model_name] = population_dict_list
-            
-            mapping_general_utils.save_dict_to_json({model_name: best_in_metric_board_model[board_name][model_name]},
-                                                constants.FIGURES_DATA_DIR_P2 + '/nsga2/models/',
-                                                ('nsga_{}{}_{}_' +
-                                                    'population_{}_generations_{}.json').format(metrics_str, boards_str, models_str,
-                                                                                                population_size,
-                                                                                                number_of_generations))
-
-        mapping_general_utils.save_dict_to_json({board_name: best_in_metric_board_model[board_name]},
-                                                constants.FIGURES_DATA_DIR_P2 + '/nsga2/boards/',
-                                                ('nsga_{}{}_' +
-                                                    'population_{}_generations_{}.json').format(metrics_str, boards_str,
-                                                                                                population_size,
-                                                                                                number_of_generations))
-    mapping_general_utils.save_dict_to_json(best_in_metric_board_model,
-                                            constants.FIGURES_DATA_DIR_P2 + '/nsga2/metrics/',
-                                            ('nsga_{}boards_{}_models_{}_' +
-                                                'population_{}_generations_{}.json').format(metrics_str,
-                                                                                            num_boards, num_models,
-                                                                                            population_size,
-                                                                                            number_of_generations))
-
-    return best_in_metric_board_model
-
-
-def run_genetic_algorithm_experiments(board_name_list, model_name_list, metric_list,
-                                      number_of_generations, population_size,
-                                      min_segments=constants.MIN_SEGMENTS,
-                                      max_segments=constants.MAX_ENGINES_V2):
-
-    best_in_metric_board_model = {}
-    metrics_str = get_file_prefix_from_metric_board_or_model_list(metric_list)
-    boards_str = get_file_prefix_from_metric_board_or_model_list(board_name_list)
-    models_str = get_file_prefix_from_metric_board_or_model_list(model_name_list)
-    
-    metrics_str_list = metrics_str.split('_')
-    boards_str_list = boards_str.split('_')
-    
-    metric_index = -1
-    for metric in metric_list:
-        metric_index += 1
-        timing_metric = Metrics.THROUGHPUT
-        if metric == Metrics.LATENCY:
-            timing_metric = metric
-        metric_label = consts.metric_display_names[metric]
-        best_in_metric_board_model[metric_label] = {}
-        board_index = -1
-        for board_name in board_name_list:
-            board_index += 1
-            best_in_metric_board_model[metric_label][board_name] = {}
-            model_index = -1
-            for model_name in model_name_list:
-                model_index += 1
-                model_dag = utils.read_model_dag_v2(
-                    constants.MODEL_ARCH_DIR + model_name + '/model_dag.json')
-                best_in_metric_board_model[metric_label][board_name][model_name] = {
-                }
-                best_perf_across_engines = -1
-                best_mapping_across_engines = None
-                print(board_name, model_name)
-                custom_mapping, mapping_desc =\
-                    custom_mapping_utils.generate_random_mapping(
-                        board_name, model_name, model_dag, 2, timing_metric)
-                orig_best, best_mapping_desc = ga.run_genetic_algorithm(
-                    mapping_desc, metric, number_of_generations, population_size, min_segments=min_segments,
-                    max_segments=max_segments)
-                mapping_desc_dict = custom_mapping_utils.prepare_custom_mapping_desc(
-                    best_mapping_desc.segment_layers_list,
-                    best_mapping_desc.segment_block_list,
-                    best_mapping_desc.block_engines_list)
-                best_sa_mapping = custom_mapping_utils.custom_mapping_from_desc_dict(
-                    board_name, model_dag, mapping_desc_dict, timing_metric)
-                perf_record = run_mapping(
-                    board_name, model_name, best_sa_mapping)
-                best = perf_record.get_metric_val(metric)
-                # print((metric, orig_best, best, best_perf_across_engines, str(best_mapping_desc)))
-                if best_perf_across_engines == -1 or \
-                        first_better_than_second(metric, best, best_perf_across_engines):
-                    best_perf_across_engines = best
-                    best_mapping_across_engines = copy.deepcopy(
-                        best_mapping_desc)
-
-                best_mapping_across_engines_dicts = custom_mapping_utils.prepare_custom_mapping_desc(
-                    best_mapping_across_engines.segment_layers_list,
-                    best_mapping_across_engines.segment_block_list,
-                    best_mapping_across_engines.block_engines_list)
-                best_in_metric_board_model[metric_label][board_name][model_name] = [
-                    best_perf_across_engines, best_mapping_across_engines_dicts]
-
-                mapping_general_utils.save_dict_to_json({model_name: best_in_metric_board_model[metric_label][board_name][model_name]},
-                                                        constants.FIGURES_DATA_DIR_P2 + '/genetic/models/',
-                                                        ('genetic_algorithm_bests_in_{}_boards_{}_models_{}_' +
-                                                        'population_{}_generations_{}.json').format(metrics_str_list[metric_index], 
-                                                                                                    boards_str_list[board_index],
-                                                                                                    model_name.lower(),
-                                                                                                    population_size,
-                                                                                                    number_of_generations))
-
-            mapping_general_utils.save_dict_to_json({metric_label: best_in_metric_board_model[metric_label]},
-                                                    constants.FIGURES_DATA_DIR_P2 + '/genetic/boards/',
-                                                    ('genetic_algorithm_bests_in_{}_boards_{}_models_{}_' +
-                                                        'population_{}_generations_{}.json').format(metrics_str_list[metric_index],
-                                                                                                    boards_str_list[board_index],
-                                                                                                    models_str,
-                                                                                                    population_size,
-                                                                                                    number_of_generations))
-            
-        mapping_general_utils.save_dict_to_json({metric_label: best_in_metric_board_model[metric_label]},
-                                                    constants.FIGURES_DATA_DIR_P2 + '/genetic/boards/',
-                                                    ('genetic_algorithm_bests_in_{}_boards_{}_models_{}_' +
-                                                        'population_{}_generations_{}.json').format(metrics_str_list[metric_index],
-                                                                                                    boards_str, 
-                                                                                                    models_str,
-                                                                                                    population_size,
-                                                                                                    number_of_generations))
-
-    return best_in_metric_board_model
-
-
-def run_simulated_annealing_experiments(board_name_list, model_name_list, metric_list, num_iterations,
-                                        min_segments=constants.MIN_SEGMENTS,
-                                        max_segments=constants.MAX_ENGINES_V2):
-    best_in_metric_board_model = {}
-    metrics_str = get_file_prefix_from_metric_board_or_model_list(metric_list)
-    boards_str = get_file_prefix_from_metric_board_or_model_list(board_name_list)
-    models_str = get_file_prefix_from_metric_board_or_model_list(model_name_list)
-    metrics_str_list = metrics_str.split('_')
-    boards_str_list = boards_str.split('_')
-    metric_index = -1
-
-    for metric in metric_list:
-        metric_index += 1
-        timing_metric = Metrics.THROUGHPUT
-        if metric == Metrics.LATENCY:
-            timing_metric = metric
-        metric_label = consts.metric_display_names[metric]
-        best_in_metric_board_model[metric_label] = {}
-        board_index = -1
-        for board_name in board_name_list:
-            board_index += 1
-            best_in_metric_board_model[metric_label][board_name] = {}
-            model_index = -1
-            for model_name in model_name_list:
-                model_index += 1
-                model_dag = utils.read_model_dag_v2(
-                    constants.MODEL_ARCH_DIR + model_name + '/model_dag.json')
-                best_in_metric_board_model[metric_label][board_name][model_name] = {
-                }
-                best_perf_across_engines = -1
-                best_mapping_across_engines = None
-                #for num_segments in range(min_segments, max_segments + 1):
-                #print(board_name, model_name, num_segments)
-                custom_mapping, mapping_desc =\
-                    custom_mapping_utils.generate_random_mapping(
-                        board_name, model_name, model_dag, num_segments= -1, timing_metric= timing_metric)
-                _, best_mapping_desc = sa.run_simulated_annealing(
-                    custom_mapping, mapping_desc, metric, num_iterations)
-                mapping_desc_dict = custom_mapping_utils.prepare_custom_mapping_desc(
-                    best_mapping_desc.segment_layers_list,
-                    best_mapping_desc.segment_block_list,
-                    best_mapping_desc.block_engines_list)
-                best_sa_mapping = custom_mapping_utils.custom_mapping_from_desc_dict(
-                   board_name, model_dag, mapping_desc_dict, timing_metric)
-                best_mapping_across_engines = copy.deepcopy(best_mapping_desc)
-                perf_record = run_mapping(
-                    board_name, model_name, best_sa_mapping)
-                best_perf_across_engines = perf_record.get_metric_val(metric)
-                # best = perf_record.get_metric_val(metric)
-                # if best_perf_across_engines == -1 or \
-                #         first_better_than_second(metric, best, best_perf_across_engines):
-                #     best_perf_across_engines = best
-                #     best_mapping_across_engines = copy.deepcopy(
-                #         best_mapping_desc)
-
-                best_mapping_across_engines_dicts = custom_mapping_utils.prepare_custom_mapping_desc(
-                    best_mapping_across_engines.segment_layers_list,
-                    best_mapping_across_engines.segment_block_list,
-                    best_mapping_across_engines.block_engines_list)
-                best_in_metric_board_model[metric_label][board_name][model_name] = [
-                    best_perf_across_engines, best_mapping_across_engines_dicts]
-
-                mapping_general_utils.save_dict_to_json({model_name: best_in_metric_board_model[metric_label][board_name][model_name]},
-                                                        constants.FIGURES_DATA_DIR_P2 + '/genetic/models/',
-                                                        ('genetic_algorithm_bests_in_{}_boards_{}_models_{}_' +
-                                                        'population_{}_generations_{}.json').format(metrics_str_list[metric_index], 
-                                                                                                    boards_str_list[board_index],
-                                                                                                    model_name.lower(),
-                                                                                                    num_iterations))
-
-            mapping_general_utils.save_dict_to_json({metric_label: best_in_metric_board_model[metric_label]},
-                                                    constants.FIGURES_DATA_DIR_P2 + '/genetic/boards/',
-                                                    ('genetic_algorithm_bests_in_{}_boards_{}_models_{}_' +
-                                                        'population_{}_generations_{}.json').format(metrics_str_list[metric_index],
-                                                                                                    boards_str_list[board_index], 
-                                                                                                    models_str,
-                                                                                                    num_iterations))
-            
-        mapping_general_utils.save_dict_to_json({metric_label: best_in_metric_board_model[metric_label]},
-                                                    constants.FIGURES_DATA_DIR_P2 + '/genetic/boards/',
-                                                    ('genetic_algorithm_bests_in_{}_boards_{}_models_{}_' +
-                                                        'population_{}_generations_{}.json').format(metrics_str_list[metric_index],
-                                                                                                    boards_str, 
-                                                                                                    models_str,
-                                                                                                    num_iterations))
-
-    return best_in_metric_board_model
 
 def validate_optimized_mapping_dicts(performance_dict):
     norm_dict = {}
