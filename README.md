@@ -1,10 +1,24 @@
 # An Analytical Cost Model for Fast Evaluation of Multiple Compute-Engine CNN Accelerators
 
+**Note:**  ```A newer version of MCCM with some fixes and improvement exists as a part a DSE framework``` ([**MCExplorer**](https://github.com/fqararyah/MCExplorer)).
+
 This repository contains an implementation of <u>M</u>ultiple <u>C</u>ompute-engine accelerator analytical <u>C</u>ost <u>M</u>odel (__MCCM__) proposed in following paper: [An Analytical Cost Model for Fast Evaluation of Multiple Compute-Engine CNN Accelerators](https://doi.org/10.48550/arXiv.2503.07242)
 
 If you find this repository useful for your research, we would appreciate it if you could cite us using the following BibTeX entry:
 
 ```
+@inproceedings{11096373,
+  author={Qararyah, Fareed and Maleki, Mohammad Ali and Trancoso, Pedro},
+  booktitle={2025 IEEE International Symposium on Performance Analysis of Systems and Software (ISPASS)}, 
+  title={An Analytical Cost Model for Fast Evaluation of Multiple Compute-Engine CNN Accelerators}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-13},
+  keywords={Measurement;Analytical models;Adaptation models;Costs;Systematics;Computational modeling;Logic gates;Space exploration;Convolutional neural networks;Field programmable gate arrays;Cost model;multiple engine accelerators;fieldprogrammable gate arrays (FPGAs);convolutional neural networks;inter-layer pipelining},
+  doi={10.1109/ISPASS64960.2025.00030}
+}
+
 @misc{qararyah2025analyticalcostmodelfast,
       title={An Analytical Cost Model for Fast Evaluation of Multiple Compute-Engine CNN Accelerators}, 
       author={Fareed Qararyah and Mohammad Ali Maleki and Pedro Trancoso},
